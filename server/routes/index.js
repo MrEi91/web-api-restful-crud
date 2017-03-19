@@ -3,6 +3,7 @@ const router = express.Router()
 const controller = require('../controllers/memoController')
 
 router.get('/memos', controller.getMemos)
+router.get('/memo/:slug', controller.getMemo)
 router.post('/memo', controller.createMemo)
 router.put('/memo/:slug', controller.updateMemo)
 router.delete('/memo/:slug', controller.deleteMemo)
