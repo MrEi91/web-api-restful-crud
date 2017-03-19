@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0" />
+    <title>Portfolio - People Skills</title>
+
+    <!-- CSS  -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="css/materialize.min.css" type="text/css" rel="stylesheet" media="screen,projection" />
+    <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection" />
+  </head>
+
+  <body>
+    <div class="section no-pad-bot">
+      <h3 class="header center orange-text">List Memo</h3>
+
+      <div id="memos" class="row">
+
+      </div>
+
+      <div class="fixed-action-btn">
+        <a href="#modalMemo" class="btn-floating btn-large green tooltipped" data-position="left" data-delay="50" data-tooltip="Add Memo">
+          <i class="material-icons">playlist_add</i>
+        </a>
+      </div>
+
+      <!-- MODAL ADD MEMO -->
+      <div id="modalMemo" class="modal modal-fixed-footer">
+        <div class="modal-content col s6">
+          <h4>Add Memo</h4>
+          <br>
+          <form action="#">
+            <div class="input-field">
+              <i class="material-icons prefix">assignment</i>
+              <input id="title" type="text" class="validate">
+              <label for="title">Title</label>
+            </div>
+            <div class="input-field">
+              <i class="material-icons prefix">note_add</i>
+              <input id="content" type="text" class="validate">
+              <label for="content">Content</label>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <a href="#" class="modal-action modal-close waves-effect waves-green btn-flat" onclick="addMemo()">Submit</a>
+          <a href="#" class="modal-action modal-close waves-effect waves-green btn-flat ">Cancel</a>
+        </div>
+      </div>
+
+      <!-- MODAL EDIT MEMO-->
+      <div id="modalEdit" class="modal modal-fixed-footer">
+        <div class="modal-content col s6">
+          <h4>Edit Memo</h4>
+          <br>
+          <form action="#">
+            <div class="input-field">
+              <i class="material-icons prefix">assignment</i>
+              <input placeholder="title" id="editTitle" type="text" class="validate">
+              <label for="titleEdit">Title</label>
+            </div>
+            <div class="input-field">
+              <i class="material-icons prefix">note_add</i>
+              <input placeholder="content" id="editContent" type="text" class="validate">
+              <label for="contentEdit">Content</label>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <a id="btn-edit" href="#" class="modal-action modal-close waves-effect waves-green btn-flat" onclick="editMemo()">Submit</a>
+          <a href="#" class="modal-action modal-close waves-effect waves-green btn-flat ">Cancel</a>
+        </div>
+      </div>
+    </div>
+
+
+    <!--  Scripts-->
+    <script src="js/jquery-3.1.1.min.js"></script>
+    <script src="js/materialize.min.js"></script>
+    <script src="js/script.js"></script>
+
+    <script type="text/javascript">
+      $(document).ready(function() {
+        // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
+        $('.modal').modal();
+      });
+    </script>
+  </body>
+
+</html>
