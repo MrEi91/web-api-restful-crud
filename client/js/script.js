@@ -1,58 +1,109 @@
+// Get all memos
 $(document).ready(function () {
-  let token = localStorage.getItem('token')
-  if (!token) {
-    window.location.href = 'http://127.0.0.1:8080/index.html'
-  } else {
-    $.ajax({
-      url: `http://localhost:3000/api/verify/${token}`,
-      success: function (user) {
-        if (!user.email) {
-          window.location.href = 'http://127.0.0:8080/api/index.html'
-        }
-      }
-    })
-    getUsers()
-  }
+  getMemos()
 })
 
-$('#logout').click(function () {
-  localStorage.clear()
-  window.location.href = 'http://127.0.0.1:8080/index.html'
-})
-
-function getUsers () {
+function getMemos () {
   $.ajax({
-    url: 'http://localhost:3000/api/users',
+    url: 'http://localhost:3000/api/memos',
     type: 'GET',
-    success: function (users) {
-      users.forEach(function (user) {
-        $('#user').append(`<tr><td>${user.email}</td><td><button class="waves-effect waves-light btn">edit</button>&nbsp;<button class="waves-effect waves-light btn">delete</button></td></tr>`)
+    success: function (memos) {
+      memos.memo.forEach(function (memo) {
+        $('#memos').append(`<div class="row" id="listMemo-${memo.slug}">
+          <div class="col s12 m6">
+            <div class="card blue-grey darken-1">
+              <div class="card-content white-text">
+                <span class="card-title" id="title-${memo.slug}">${memo.title}</span>
+                <p id="content-${memo.slug}">${memo.content}</p>
+              </div>
+              <div class="card-action">
+                <a href="#modalEdit" type="button" onclick="getOneMemo('${memo.slug}')">Update</a>
+                <a href="#" onclick="remove('${memo.slug}')">Delete</a>
+              </div>
+            </div>
+          </div>
+        </div>`)
       })
+    },
+    error: function (error) {
+      console.log(error)
     }
   })
 }
 
-function addTodo () {
+function getOneMemo (slug) {
   $.ajax({
-    url: 'http://localhost:3000/api/user',
-    type: 'POST',
-    data: {
-      email: $('#email').val(),
-      password: $('#password').val()
+    url: `http://localhost:3000/api/memo/${slug}`,
+    type: 'GET',
+    success: function (memo) {
+      $('#editTitle').val(memo.title)
+      $('#editContent').val(memo.content)
+      $('#btn-edit').attr('onclick', `editMemo('${slug}')`)
     },
-    success: function (user) {},
     error: function (err) {
       console.log(err)
     }
   })
 }
 
-function remove (email) {
+function addMemo () {
   $.ajax({
-    url: `http://localhost:3000/api/user/${email}`,
+    url: 'http://localhost:3000/api/memo',
+    type: 'POST',
+    data: {
+      title: $('#title').val(),
+      content: $('#content').val()
+    },
+    success: function (memo) {
+      $('#memos').append(`<div class="row" id="listMemo-${memo.memo.slug}">
+        <div class="col s12 m6">
+          <div class="card blue-grey darken-1">
+            <div class="card-content white-text">
+              <span class="card-title" id="title-${memo.memo.slug}">${memo.memo.title}</span>
+              <p>${memo.memo.content}</p>
+            </div>
+            <div class="card-action">
+            <a href="#modalEdit" type="button" onclick="getOneMemo('${memo.memo.slug}')">Update</a>
+            <a href="#"  onclick="remove('${memo.memo.slug}')">Delete</a>
+            </div>
+          </div>
+        </div>
+      </div>`)
+    },
+    error: function (err) {
+      console.log(err)
+    }
+  })
+}
+
+function editMemo (slug) {
+  $.ajax({
+    url: `http://localhost:3000/api/memo/${slug}`,
+    type: 'PUT',
+    data: {
+      title: $('#editTitle').val(),
+      content: $('#editContent').val()
+    },
+    success: function (memo) {
+      $('#memos').html('')
+      getMemos()
+    },
+    error: function (err) {
+      console.log(err)
+    }
+  })
+}
+
+function remove (slug) {
+  $.ajax({
+    url: `http://localhost:3000/api/memo/${slug}`,
     type: 'DELETE',
-    success: function (user) {
-      $(`#email`).remove()
+    success: function () {
+      getMemos()
+      $('#memos').html('')
+    },
+    error: function (err) {
+      console.log(err)
     }
   })
 }
