@@ -7,10 +7,10 @@ let methods = {}
 
 methods.createMemo = (req, res, next) => {
   memo.create({
-      title: req.body.title,
-      content: req.body.content,
-      slug: slug(req.body.title).toLowerCase()
-    })
+    title: req.body.title,
+    content: req.body.content,
+    slug: slug(req.body.title).toLowerCase()
+  })
     .then((memo) => {
       res.send({
         message: 'SUCCSESS CREATE MEMO!',
@@ -38,17 +38,33 @@ methods.getMemos = (req, res, next) => {
     })
 }
 
+methods.getMemo = (req, res) => {
+  memo.findOne({
+    slug: req.params.slug
+  })
+    .then((memo) => {
+      res.send(memo)
+    })
+    .catch((error) => {
+      res.send(error)
+    })
+}
+
 methods.updateMemo = (req, res, next) => {
   memo.findOne({
-      slug: req.params.slug
-    })
+    slug: req.params.slug
+  })
     .then((memo) => {
       if (!memo) {
         res.send({
           memoUndefined: 'Memo is not found!'
         })
       } else {
-        memo.update(req.body)
+        memo.update({
+          title: req.body.title,
+          content: req.body.content,
+          slug: slug(req.body.title).toLowerCase()
+        })
           .then(() => {
             res.send({
               message: `Memo title ${memo.title} has been updated!`,
@@ -72,8 +88,8 @@ methods.updateMemo = (req, res, next) => {
 
 methods.deleteMemo = (req, res, next) => {
   memo.findOne({
-      slug: req.params.slug
-    })
+    slug: req.params.slug
+  })
     .then((memo) => {
       if (!memo) {
         res.send({
@@ -82,7 +98,9 @@ methods.deleteMemo = (req, res, next) => {
       } else {
         memo.remove(memo)
           .then((memo) => {
-            message: `${memo.title} has been deleted`
+            res.send({
+              message: `${memo.title} has been deleted`
+            })
           })
           .catch((error) => {
             res.send({
